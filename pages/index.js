@@ -5,17 +5,21 @@ import Image from 'next/image'
 import { getSortedPostsData } from '../lib/posts'
 import utilStyles from '../styles/utils.module.css'
 import Date from '../components/dates'
+import { PrismaClient } from '@prisma/client'
 
 export async function getStaticProps() {
+  const prisma = new PrismaClient();
+  const allUsers = await prisma.user.findMany();
   const allPostsData = getSortedPostsData()
   return {
     props: {
+      allUsers,
       allPostsData
     }
   }
 }
 
-export default function Home({ allPostsData }) {
+export default function Home({ allUsers, allPostsData }) {
   return (
     <Layout home>
     <Head>
@@ -38,6 +42,22 @@ export default function Home({ allPostsData }) {
           ))}
         </ul>
       </section>
+      <h2 className={utilStyles.headingLg}>Emails from DB</h2>
+      <button onClick={callCreateUser}>Click to generate new DB entry</button>
+      <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
+        {
+          allUsers.map((user) => (
+            <p id={user.id}>{user.email} {user.first_name} {user.last_name}</p>
+          ))
+        }
+      </section>
     </Layout>
   );
 }
+
+async function callCreateUser() {
+  console.log("here");
+  await fetch("api/createuser",
+   {method: "POST"}
+   );
+};
