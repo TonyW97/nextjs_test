@@ -4,7 +4,8 @@
     "outDir": "dist",
     "strict": true,
     "lib": [
-      "esnext"
+      "esnext",
+      "DOM"
     ],
     "esModuleInterop": true,
     "target": "es5",

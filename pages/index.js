@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import Layout from '../components/layout'
-import Image from 'next/image'
 import { getSortedPostsData } from '../lib/posts'
 import utilStyles from '../styles/utils.module.css'
 import Date from '../components/dates'
@@ -51,6 +50,7 @@ export default function Home({ allUsers, allPostsData }) {
           ))
         }
       </section>
+      <a href={"todo-list/"}>Liveblocks</a>
     </Layout>
   );
 }
