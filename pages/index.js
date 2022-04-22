@@ -50,7 +50,7 @@ export default function Home({ allUsers, allPostsData }) {
           ))
         }
       </section>
-      <a href={"todo-list/"}>Liveblocks</a>
+      <a href={"table/"}>Liveblocks</a>
     </Layout>
   );
 }
