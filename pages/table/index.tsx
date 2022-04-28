@@ -35,16 +35,14 @@ function Table() {
     }
   ]);
 
-  const selected = useObject<Record<number, string>>("selected");
+  const selected = useObject<Record<string, string>>("selected");
   const batch = useBatch();
   const broadcast = useBroadcastEvent();
-  const id = useMemo(() => Math.random() * 10000, []);
+  const id = useMemo(() => (Math.random() * 10000).toFixed(0), []);
 
   useEventListener(({ connectionId, event: BroadcastEvent }) => {
     console.log('here')
   });
-
-  const [trigger , triggerUpdate]= useState(0);
 
   const columns: Column<{ col1: string; col2: string }>[] = React.useMemo(
     () => [
@@ -114,9 +112,18 @@ function Table() {
 
   console.log("Rendering")
   console.log("Gen id %d", id)
+  let selectedArray: string[] = []
+  for (const [key, value] of Object.entries(selected.toObject())) {
+      if (key != id) {
+        selectedArray.push(value)
+      }
+  }
+  console.log(selectedArray)
   return (
     <div onPointerMove={onPointerMove} onPointerLeave={onPointerLeave}>
       {others.map(showOther)}
+      <button onClick={callSaveRoom}>Click to save room to DB (Planetscale)</button>
+      <button onClick={callLoadRoom}>Click to load room from DB (Planetscale)</button>
     <table style={{ border: "solid 1px red" }}>
       <thead>
           <tr>
@@ -167,18 +174,20 @@ function Table() {
                   selected?.set(id, "")
                   console.log("Abort2")
                 }
-              for (const i in selected.toObject()) {
-                console.log(selected)
-              }
+                const col1Name = "col1" + index.toString()
+                const col2Name = "col2" + index.toString()
           return (
             <tr>
-            <input style={{}} value={row.col1} onBlur={onAbortCol1} onSelect={onSelectCol1} onChange={onChangeCol1}></input>
-            <input value={row.col2} onSelect={onSelectCol2} onBlur={onAbortCol2} onChange={onChangeCol2}></input>
+            <input style={selectedArray.includes(col1Name) ? { border: "solid 1px red" } : {}} value={row.col1} onBlur={onAbortCol1} onSelect={onSelectCol1} onChange={onChangeCol1}></input>
+            <input style={selectedArray.includes(col2Name) ? { border: "solid 1px red" } : {}} value={row.col2} onSelect={onSelectCol2} onBlur={onAbortCol2} onChange={onChangeCol2}></input>
             </tr>
           );
         })}
       </tbody>
     </table>
+    <button onClick={() => {
+      data?.push({col1: "", col2: ""})
+    }}>Click to add new row</button>
     </div>
   );
 }
@@ -222,3 +231,16 @@ function Table() {
               })}
             </tr>
             */
+async function callSaveRoom() {
+  console.log("save room called");
+  await fetch("api/saveroom",
+   {method: "POST"}
+   );
+};
+async function callLoadRoom() {
+  console.log("load room called");
+  await fetch("api/loadroom",
+   {method: "GET"}
+   );
+   window.location.reload();
+};
