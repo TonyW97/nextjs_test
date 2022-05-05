@@ -21,3 +21,8 @@ model row {
   col1            String    @db.VarChar(255)
   col2            String    @db.VarChar(255)
 }
+
+model replicache {
+  id               String    @id
+  last_mutation_id BigInt    @db.VarChar(255)
+}
