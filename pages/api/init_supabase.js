@@ -3,6 +3,7 @@ import {db} from '../../db.js';
 export default async (_, res) => {
   await db.task(async t => {
     await t.none('DROP TABLE IF EXISTS message');
+    await t.none('DROP TABLE IF EXISTS row');
     await t.none('DROP TABLE IF EXISTS replicache_client');
     await t.none('DROP SEQUENCE IF EXISTS version');
     // Stores chat messages
@@ -10,6 +11,12 @@ export default async (_, res) => {
       id VARCHAR(21) PRIMARY KEY NOT NULL,
       sender VARCHAR(255) NOT NULL,
       content TEXT NOT NULL,
+      ord BIGINT NOT NULL,
+      version BIGINT NOT NULL)`);
+    await t.none(`CREATE TABLE row (
+      id VARCHAR(21) PRIMARY KEY NOT NULL,
+      col1 TEXT NOT NULL,
+      col2 TEXT NOT NULL,
       ord BIGINT NOT NULL,
       version BIGINT NOT NULL)`);
     // Stores last mutation ID for each Replicache client

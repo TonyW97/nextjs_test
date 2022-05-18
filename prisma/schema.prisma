@@ -22,7 +22,16 @@ model row {
   col2            String    @db.VarChar(255)
 }
 
+model message {
+  id               String    @id
+  ord              Int       @db.Int
+  version          Int       @db.Int
+  sender           String    @db.VarChar(255)
+  content          String    @db.VarChar(255)
+}
+
 model replicache {
   id               String    @id
-  last_mutation_id BigInt    @db.VarChar(255)
+  last_mutation_id Int    @db.Int
+  version          Int    @db.Int
 }
